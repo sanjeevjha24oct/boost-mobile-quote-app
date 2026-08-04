@@ -1,6 +1,6 @@
 {
-  "name": "Boost Mobile Quote Tool",
-  "short_name": "Boost Quote",
+  "name": "Boost Mobile Sales Pro",
+  "short_name": "Boost Sales Pro",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#ffffff",

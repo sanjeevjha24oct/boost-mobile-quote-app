@@ -1,245 +1,410 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#111827" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="Boost Quote" />
-  <link rel="manifest" href="manifest.json" />
-  <link rel="apple-touch-icon" href="icon-192.png" />
-  <title>Boost Mobile Quote</title>
-  <style>
-    :root{
-      --bg:#f3f4f6; --card:#fff; --dark:#111827; --orange:#f97316;
-      --muted:#6b7280; --line:#d1d5db; --yellow:#fef3c7; --blue:#eff6ff;
-      --green:#ecfdf5; --danger:#fee2e2;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-      background:var(--bg);color:var(--dark);padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)
-    }
-    .app{max-width:620px;margin:0 auto;min-height:100vh;background:var(--card)}
-    header{background:var(--dark);color:#fff;padding:22px 18px 16px;position:sticky;top:0;z-index:5}
-    header h1{margin:0;font-size:23px;text-align:center}
-    header p{margin:5px 0 0;text-align:center;opacity:.78;font-size:13px}
-    nav{display:flex;gap:8px;padding:12px;background:#fff;border-bottom:1px solid var(--line);position:sticky;top:77px;z-index:4}
-    nav button{flex:1;border:0;border-radius:10px;padding:11px 8px;font-weight:700;background:#e5e7eb}
-    nav button.active{background:var(--orange);color:#fff}
-    main{padding:16px}
-    .panel{display:none}.panel.active{display:block}
-    label{display:block;font-weight:700;margin:14px 0 6px}
-    select,input{width:100%;min-height:48px;border:1px solid var(--line);border-radius:12px;padding:0 12px;font-size:16px;background:#fff}
-    select.primary{background:var(--yellow);font-weight:700}
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .summary{margin-top:18px;border:1px solid var(--line);border-radius:14px;overflow:hidden}
-    .row{display:flex;justify-content:space-between;gap:12px;padding:13px 14px;border-bottom:1px solid var(--line)}
-    .row:last-child{border-bottom:0}
-    .row span:first-child{font-weight:700}
-    .total{background:var(--orange);color:#fff;font-size:20px}
-    .btn{width:100%;min-height:48px;border:0;border-radius:12px;margin-top:12px;font-size:16px;font-weight:700;background:var(--dark);color:#fff}
-    .btn.secondary{background:#e5e7eb;color:var(--dark)}
-    .btn.danger{background:#b91c1c}
-    .note{margin-top:14px;padding:12px;border-radius:12px;background:var(--blue);color:#1e3a8a;font-size:14px;line-height:1.4}
-    .success{background:var(--green);color:#065f46}
-    .phone-card{border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:12px}
-    .phone-card h3{margin:0 0 8px;font-size:16px}
-    .phone-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-    .phone-grid input{min-height:42px;font-size:14px}
-    .small{font-size:12px;color:var(--muted)}
-    .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    @media(max-width:420px){.grid,.phone-grid,.actions{grid-template-columns:1fr}}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Boost Sales Pro">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Boost Mobile Sales Pro</title>
+<style>
+:root{
+ --dark:#111827;--orange:#f97316;--orange2:#fb923c;--bg:#f3f4f6;--card:#fff;
+ --line:#d1d5db;--muted:#6b7280;--yellow:#fef3c7;--green:#ecfdf5;--blue:#eff6ff;--red:#fee2e2
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--dark);padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+.app{max-width:780px;margin:auto;min-height:100vh;background:#fff}
+header{background:linear-gradient(135deg,var(--dark),#1f2937);color:#fff;padding:20px 16px 14px;position:sticky;top:0;z-index:10}
+header h1{margin:0;text-align:center;font-size:23px}
+header p{margin:5px 0 0;text-align:center;opacity:.8;font-size:13px}
+nav{display:flex;gap:6px;padding:9px;background:#fff;border-bottom:1px solid var(--line);overflow-x:auto;position:sticky;top:72px;z-index:9}
+nav button{min-width:100px;border:0;border-radius:10px;padding:10px 8px;font-weight:700;background:#e5e7eb}
+nav button.active{background:var(--orange);color:white}
+main{padding:15px}
+.panel{display:none}.panel.active{display:block}
+.card{border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:14px;background:var(--card)}
+.card h2,.card h3{margin:0 0 10px}
+label{display:block;font-weight:700;margin:12px 0 6px}
+input,select{width:100%;min-height:46px;border:1px solid var(--line);border-radius:11px;padding:0 11px;font-size:16px;background:#fff}
+input[type=checkbox]{width:22px;min-height:22px}
+.primary{background:var(--yellow);font-weight:700}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.bundle-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.bundle{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff7ed}
+.bundle button{width:100%;border:0;border-radius:10px;padding:10px;background:var(--orange);color:#fff;font-weight:700}
+.acc-row{display:grid;grid-template-columns:28px 1fr 95px 90px;gap:8px;align-items:center;border-bottom:1px solid #eee;padding:9px 0}
+.acc-row:last-child{border-bottom:0}
+.summary{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.row{display:flex;justify-content:space-between;gap:12px;padding:12px 13px;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.row span:first-child{font-weight:700}
+.total{background:var(--orange);color:#fff;font-size:20px}
+.monthly{background:var(--dark);color:white}
+.savings{background:var(--green);color:#065f46}
+.btn{width:100%;min-height:48px;border:0;border-radius:12px;margin-top:10px;font-size:16px;font-weight:700;background:var(--dark);color:#fff}
+.btn.orange{background:var(--orange)}
+.btn.secondary{background:#e5e7eb;color:var(--dark)}
+.btn.danger{background:#b91c1c}
+.actions{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.note{padding:12px;border-radius:12px;background:var(--blue);color:#1e3a8a;line-height:1.4;margin-top:12px}
+.manager{background:#111827;color:white}
+.manager input{background:#1f2937;color:white;border-color:#374151}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.kpi{background:#f9fafb;border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center}
+.kpi strong{display:block;font-size:20px}
+.small{font-size:12px;color:var(--muted)}
+.hidden{display:none!important}
+@media(max-width:600px){
+ .grid2,.grid3,.bundle-grid,.actions,.kpis{grid-template-columns:1fr}
+ .acc-row{grid-template-columns:28px 1fr 88px}
+ .acc-row .cost{display:none}
+ nav{top:72px}
+}
+</style>
 </head>
 <body>
 <div class="app">
-  <header>
-    <h1>BOOST MOBILE</h1>
-    <p>Customer Quote Tool</p>
-  </header>
-  <nav>
-    <button id="tabQuote" class="active">Quote</button>
-    <button id="tabPrices">Prices</button>
-    <button id="tabSettings">Settings</button>
-  </nav>
-  <main>
-    <section id="quotePanel" class="panel active">
-      <label for="customerName">Customer Name</label>
-      <input id="customerName" placeholder="Optional" />
+<header><h1>BOOST MOBILE SALES PRO</h1><p>Quote • Upsell • Profit • Share</p></header>
+<nav>
+<button id="tabQuote" class="active">Quote</button>
+<button id="tabAccessories">Accessories</button>
+<button id="tabPrices">Phones</button>
+<button id="tabManager">Manager</button>
+<button id="tabSettings">Settings</button>
+</nav>
+<main>
 
-      <label for="transaction">Customer Type</label>
-      <select id="transaction">
-        <option>New Customer</option><option>Port-In</option><option>Add A Line</option>
-        <option>Upgrade</option><option>Non-Upgrade</option>
-      </select>
-
-      <label for="phone">Phone Model</label>
-      <select id="phone" class="primary"></select>
-
-      <div class="grid">
-        <div>
-          <label for="protect">Boost Protect</label>
-          <select id="protect"><option>No</option><option>Yes</option></select>
-        </div>
-        <div>
-          <label for="plan">Plan / Service</label>
-          <input id="plan" type="number" min="0" step="0.01" value="0" />
-        </div>
-      </div>
-
-      <label for="discount">Discount</label>
-      <input id="discount" type="number" min="0" step="0.01" value="0" />
-
-      <div class="summary">
-        <div class="row"><span>Phone Price</span><span id="phonePrice">$0.00</span></div>
-        <div class="row"><span>Activation Fee</span><span id="activationPrice">$35.00</span></div>
-        <div class="row"><span>Boost Protect</span><span id="protectPrice">$0.00</span></div>
-        <div class="row"><span>Plan / Service</span><span id="planPrice">$0.00</span></div>
-        <div class="row"><span>Discount</span><span id="discountPrice">-$0.00</span></div>
-        <div class="row"><span>Sales Tax</span><span id="taxPrice">$0.00</span></div>
-        <div class="row total"><span>TOTAL DUE TODAY</span><span id="totalPrice">$0.00</span></div>
-      </div>
-
-      <div class="actions">
-        <button class="btn" id="shareBtn">Share Quote</button>
-        <button class="btn secondary" id="copyBtn">Copy Quote</button>
-      </div>
-      <button class="btn secondary" id="resetBtn">New Quote</button>
-      <div class="note">Install on iPhone: open the hosted page in Safari, tap Share, then Add to Home Screen. On Android: open in Chrome, tap the menu, then Install App.</div>
-    </section>
-
-    <section id="pricesPanel" class="panel">
-      <div id="phoneList"></div>
-      <button class="btn" id="addPhoneBtn">Add Phone Model</button>
-      <button class="btn secondary" id="savePricesBtn">Save Prices</button>
-      <button class="btn danger" id="restoreBtn">Restore Sample Prices</button>
-      <div class="note success">Prices are stored only on this device and remain available offline.</div>
-    </section>
-
-    <section id="settingsPanel" class="panel">
-      <label for="activationFee">Activation Fee</label>
-      <input id="activationFee" type="number" min="0" step="0.01" />
-
-      <label for="taxRate">Sales Tax Rate (%)</label>
-      <input id="taxRate" type="number" min="0" step="0.001" />
-
-      <button class="btn" id="saveSettingsBtn">Save Settings</button>
-      <div class="note">Default values are $35 activation and 8.875% tax. You can change both here.</div>
-    </section>
-  </main>
+<section id="quotePanel" class="panel active">
+<div class="card">
+<h2>Customer & Device</h2>
+<div class="grid2">
+<div><label>Customer Name</label><input id="customerName" placeholder="Optional"></div>
+<div><label>Salesperson</label><input id="salesperson" placeholder="Employee name"></div>
 </div>
+<label>Customer Type</label>
+<select id="customerType">
+<option>New Customer</option><option>Port-In</option><option>Add A Line</option><option>Upgrade</option><option>Non-Upgrade</option>
+</select>
+<label>Phone Model</label><select id="phoneSelect" class="primary"></select>
+<div class="grid3">
+<div><label>Plan / First Month</label><input id="planPrice" type="number" step=".01" value="60"></div>
+<div><label>Monthly Plan</label><input id="monthlyPlan" type="number" step=".01" value="60"></div>
+<div><label>Boost Protect</label><select id="boostProtect"><option>No</option><option>Yes</option></select></div>
+</div>
+<div class="grid2">
+<div><label>Additional Discount</label><input id="discount" type="number" step=".01" value="0"></div>
+<div><label>SIM / Other Fee</label><input id="otherFee" type="number" step=".01" value="0"></div>
+</div>
+</div>
+
+<div class="card">
+<h2>One-Tap Bundles</h2>
+<div id="bundleGrid" class="bundle-grid"></div>
+</div>
+
+<div class="card">
+<h2>Selected Accessories</h2>
+<div id="selectedAccessories"></div>
+<button class="btn secondary" id="openAccessoriesBtn">Choose Accessories</button>
+</div>
+
+<div class="summary">
+<div class="row"><span>Phone SRP</span><span id="sumSRP">$0.00</span></div>
+<div class="row"><span>Promotional Phone Price</span><span id="sumPromo">$0.00</span></div>
+<div class="row savings"><span>Phone Savings</span><span id="sumSavings">$0.00</span></div>
+<div class="row"><span>Activation Fee</span><span id="sumActivation">$35.00</span></div>
+<div class="row"><span>Plan / First Month</span><span id="sumPlan">$0.00</span></div>
+<div class="row"><span>Boost Protect</span><span id="sumProtect">$0.00</span></div>
+<div class="row"><span>Accessories</span><span id="sumAccessories">$0.00</span></div>
+<div class="row"><span>Other Fee</span><span id="sumOther">$0.00</span></div>
+<div class="row"><span>Discount</span><span id="sumDiscount">-$0.00</span></div>
+<div class="row"><span>Phone Tax on SRP</span><span id="sumPhoneTax">$0.00</span></div>
+<div class="row"><span>Accessory Tax</span><span id="sumAccessoryTax">$0.00</span></div>
+<div class="row total"><span>TOTAL DUE TODAY</span><span id="sumTotal">$0.00</span></div>
+<div class="row monthly"><span>ESTIMATED MONTHLY BILL</span><span id="sumMonthly">$0.00</span></div>
+</div>
+<div class="actions">
+<button class="btn orange" id="shareBtn">Share Quote</button>
+<button class="btn secondary" id="copyBtn">Copy Quote</button>
+</div>
+<button class="btn secondary" id="newQuoteBtn">New Quote</button>
+</section>
+
+<section id="accessoriesPanel" class="panel">
+<div class="card">
+<h2>Accessory Catalog</h2>
+<div id="accessoryCatalog"></div>
+<button class="btn" id="saveAccessoriesBtn">Save Accessory Changes</button>
+<button class="btn secondary" id="backToQuoteBtn">Back to Quote</button>
+</div>
+</section>
+
+<section id="pricesPanel" class="panel">
+<div class="card">
+<h2>Phone Pricing</h2>
+<div id="phoneEditor"></div>
+<button class="btn orange" id="addPhoneBtn">Add Phone</button>
+<button class="btn" id="savePhonesBtn">Save Phone Prices</button>
+</div>
+</section>
+
+<section id="managerPanel" class="panel">
+<div class="card manager">
+<h2>Manager Profit View</h2>
+<label>Manager PIN</label><input id="managerPin" type="password" placeholder="Enter PIN">
+<button class="btn orange" id="unlockManagerBtn">Unlock</button>
+</div>
+<div id="managerData" class="hidden">
+<div class="kpis">
+<div class="kpi"><span>Accessory Revenue</span><strong id="kpiAccRevenue">$0</strong></div>
+<div class="kpi"><span>Estimated Gross Profit</span><strong id="kpiProfit">$0</strong></div>
+<div class="kpi"><span>Accessory Margin</span><strong id="kpiMargin">0%</strong></div>
+</div>
+<div class="card">
+<h3>Profit Breakdown</h3>
+<div class="row"><span>Phone Gross Profit</span><span id="mgrPhoneProfit">$0.00</span></div>
+<div class="row"><span>Accessory Gross Profit</span><span id="mgrAccessoryProfit">$0.00</span></div>
+<div class="row"><span>Total Gross Profit</span><span id="mgrTotalProfit">$0.00</span></div>
+</div>
+</div>
+</section>
+
+<section id="settingsPanel" class="panel">
+<div class="card">
+<h2>Store Settings</h2>
+<label>Store Name</label><input id="storeName">
+<label>Store Address</label><input id="storeAddress">
+<label>Store Phone</label><input id="storePhone">
+<div class="grid2">
+<div><label>Activation Fee</label><input id="activationFee" type="number" step=".01"></div>
+<div><label>Sales Tax Rate (%)</label><input id="taxRate" type="number" step=".001"></div>
+</div>
+<label>Manager PIN</label><input id="settingsPin" type="password">
+<button class="btn" id="saveSettingsBtn">Save Settings</button>
+</div>
+<div class="note">Tax is calculated on phone SRP plus taxable accessories. Promotional phone pricing affects the amount paid, not the tax base.</div>
+</section>
+
+</main>
+</div>
+
 <script>
-const defaults = [
- {model:"Apple iPhone 16 128GB",protect:18,prices:{"New Customer":729.99,"Port-In":629.99,"Add A Line":729.99,"Upgrade":779.99,"Non-Upgrade":829.99}},
- {model:"Apple iPhone 16 Pro 128GB",protect:18,prices:{"New Customer":949.99,"Port-In":899.99,"Add A Line":949.99,"Upgrade":979.99,"Non-Upgrade":999.99}},
- {model:"Samsung Galaxy A16 5G",protect:12,prices:{"New Customer":79.99,"Port-In":0,"Add A Line":79.99,"Upgrade":149.99,"Non-Upgrade":199.99}},
- {model:"Samsung Galaxy A36 5G",protect:15,prices:{"New Customer":299.99,"Port-In":199.99,"Add A Line":299.99,"Upgrade":349.99,"Non-Upgrade":399.99}},
- {model:"Samsung Galaxy S25 128GB",protect:18,prices:{"New Customer":699.99,"Port-In":599.99,"Add A Line":699.99,"Upgrade":749.99,"Non-Upgrade":799.99}},
- {model:"Motorola moto g 5G",protect:12,prices:{"New Customer":49.99,"Port-In":0,"Add A Line":49.99,"Upgrade":129.99,"Non-Upgrade":199.99}},
- {model:"Motorola razr 2025",protect:18,prices:{"New Customer":599.99,"Port-In":499.99,"Add A Line":599.99,"Upgrade":649.99,"Non-Upgrade":699.99}}
+const defaultPhones=[
+{model:"Apple iPhone 16 128GB",srp:829.99,cost:700,protect:18,prices:{"New Customer":729.99,"Port-In":629.99,"Add A Line":729.99,"Upgrade":779.99,"Non-Upgrade":829.99}},
+{model:"Samsung Galaxy A16 5G",srp:199.99,cost:140,protect:12,prices:{"New Customer":79.99,"Port-In":0,"Add A Line":79.99,"Upgrade":149.99,"Non-Upgrade":199.99}},
+{model:"Motorola moto g 5G",srp:199.99,cost:125,protect:12,prices:{"New Customer":49.99,"Port-In":0,"Add A Line":49.99,"Upgrade":129.99,"Non-Upgrade":199.99}}
 ];
-let phones = JSON.parse(localStorage.getItem("boostPhones") || "null") || structuredClone(defaults);
-let settings = JSON.parse(localStorage.getItem("boostSettings") || "null") || {activationFee:35,taxRate:8.875};
+const defaultAccessories=[
+{name:"Tempered Glass",price:39.99,cost:5,taxable:true,selected:false},
+{name:"Basic Case",price:29.99,cost:7,taxable:true,selected:false},
+{name:"Premium Case",price:49.99,cost:12,taxable:true,selected:false},
+{name:"Rugged Case",price:59.99,cost:15,taxable:true,selected:false},
+{name:"Fast Charger",price:34.99,cost:9,taxable:true,selected:false},
+{name:"USB-C Cable",price:19.99,cost:4,taxable:true,selected:false},
+{name:"Car Charger",price:29.99,cost:8,taxable:true,selected:false},
+{name:"Wireless Charger",price:39.99,cost:11,taxable:true,selected:false},
+{name:"Earbuds",price:49.99,cost:14,taxable:true,selected:false},
+{name:"Power Bank",price:39.99,cost:12,taxable:true,selected:false},
+{name:"Car Mount",price:29.99,cost:8,taxable:true,selected:false}
+];
+const defaultBundles=[
+{name:"Bronze",items:["Tempered Glass","Basic Case"],discount:5},
+{name:"Silver",items:["Tempered Glass","Premium Case","Fast Charger"],discount:10},
+{name:"Gold",items:["Tempered Glass","Premium Case","Fast Charger","USB-C Cable","Car Charger"],discount:20},
+{name:"Ultimate",items:["Tempered Glass","Premium Case","Fast Charger","USB-C Cable","Car Charger","Earbuds","Power Bank"],discount:35}
+];
+let phones=JSON.parse(localStorage.getItem("salesProPhones")||"null")||structuredClone(defaultPhones);
+let accessories=JSON.parse(localStorage.getItem("salesProAccessories")||"null")||structuredClone(defaultAccessories);
+let bundles=JSON.parse(localStorage.getItem("salesProBundles")||"null")||structuredClone(defaultBundles);
+let settings=JSON.parse(localStorage.getItem("salesProSettings")||"null")||{
+ storeName:"Boost Mobile Flatbush",storeAddress:"730 Flatbush Ave, Brooklyn, NY 11226",
+ storePhone:"",activationFee:35,taxRate:8.875,pin:"1234"
+};
+let bundleDiscount=0;
 const $=id=>document.getElementById(id);
-const money=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(Number(n)||0);
+const money=n=>new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"}).format(Number(n)||0);
 
 function showPanel(name){
- ["Quote","Prices","Settings"].forEach(n=>{
+ ["Quote","Accessories","Prices","Manager","Settings"].forEach(n=>{
   $("tab"+n).classList.toggle("active",n===name);
   $(n.toLowerCase()+"Panel").classList.toggle("active",n===name);
  });
- if(name==="Prices") renderPhoneEditor();
- if(name==="Settings") loadSettings();
+ if(name==="Accessories")renderAccessories();
+ if(name==="Prices")renderPhoneEditor();
+ if(name==="Settings")loadSettings();
 }
-$("tabQuote").onclick=()=>showPanel("Quote");
-$("tabPrices").onclick=()=>showPanel("Prices");
-$("tabSettings").onclick=()=>showPanel("Settings");
+["Quote","Accessories","Prices","Manager","Settings"].forEach(n=>$("tab"+n).onclick=()=>showPanel(n));
+$("openAccessoriesBtn").onclick=()=>showPanel("Accessories");
+$("backToQuoteBtn").onclick=()=>showPanel("Quote");
 
 function populatePhones(){
- const current=$("phone").value;
- $("phone").innerHTML="";
- phones.forEach((p,i)=>{const o=document.createElement("option");o.value=i;o.textContent=p.model;$("phone").appendChild(o)});
- if(current && Number(current)<phones.length) $("phone").value=current;
+ const cur=$("phoneSelect").value;$("phoneSelect").innerHTML="";
+ phones.forEach((p,i)=>{const o=document.createElement("option");o.value=i;o.textContent=p.model;$("phoneSelect").appendChild(o)});
+ if(cur && Number(cur)<phones.length)$("phoneSelect").value=cur;
  calculate();
+}
+function renderBundles(){
+ $("bundleGrid").innerHTML="";
+ bundles.forEach((b,i)=>{
+  const d=document.createElement("div");d.className="bundle";
+  d.innerHTML=`<h3>${b.name}</h3><div class="small">${b.items.join(", ")}</div><div class="small">Bundle savings: ${money(b.discount)}</div><button onclick="applyBundle(${i})">Add ${b.name}</button>`;
+  $("bundleGrid").appendChild(d);
+ });
+}
+window.applyBundle=i=>{
+ accessories.forEach(a=>a.selected=bundles[i].items.includes(a.name));
+ bundleDiscount=bundles[i].discount||0;
+ renderSelectedAccessories();calculate();showPanel("Quote");
+};
+function renderSelectedAccessories(){
+ const selected=accessories.filter(a=>a.selected);
+ $("selectedAccessories").innerHTML=selected.length?selected.map(a=>`<div class="row"><span>${a.name}</span><span>${money(a.price)}</span></div>`).join(""):`<div class="small">No accessories selected.</div>`;
 }
 function calculate(){
  if(!phones.length)return;
- const p=phones[Number($("phone").value)||0];
- const type=$("transaction").value;
- const phonePrice=Number(p.prices[type])||0;
- const protect=$("protect").value==="Yes"?(Number(p.protect)||0):0;
- const plan=Math.max(0,Number($("plan").value)||0);
- const discount=Math.max(0,Number($("discount").value)||0);
- const activation=Number(settings.activationFee)||0;
- const taxable=Math.max(0,phonePrice+protect+plan+activation-discount);
- const tax=taxable*(Number(settings.taxRate)||0)/100;
- const total=taxable+tax;
- $("phonePrice").textContent=money(phonePrice);
- $("activationPrice").textContent=money(activation);
- $("protectPrice").textContent=money(protect);
- $("planPrice").textContent=money(plan);
- $("discountPrice").textContent="-"+money(discount);
- $("taxPrice").textContent=money(tax);
- $("totalPrice").textContent=money(total);
+ const p=phones[Number($("phoneSelect").value)||0],type=$("customerType").value;
+ const srp=Number(p.srp)||0,promo=Number(p.prices[type])||0;
+ const savings=Math.max(0,srp-promo);
+ const protect=$("boostProtect").value==="Yes"?(Number(p.protect)||0):0;
+ const plan=Math.max(0,Number($("planPrice").value)||0);
+ const monthly=Math.max(0,Number($("monthlyPlan").value)||0)+protect;
+ const other=Math.max(0,Number($("otherFee").value)||0);
+ const userDiscount=Math.max(0,Number($("discount").value)||0);
+ const accSelected=accessories.filter(a=>a.selected);
+ const accTotal=Math.max(0,accSelected.reduce((s,a)=>s+Number(a.price||0),0)-bundleDiscount);
+ const taxableAcc=accSelected.filter(a=>a.taxable).reduce((s,a)=>s+Number(a.price||0),0)-bundleDiscount;
+ const phoneTax=srp*(Number(settings.taxRate)||0)/100;
+ const accTax=Math.max(0,taxableAcc)*(Number(settings.taxRate)||0)/100;
+ const total=Math.max(0,promo+Number(settings.activationFee||0)+plan+protect+accTotal+other-userDiscount)+phoneTax+accTax;
+ $("sumSRP").textContent=money(srp);$("sumPromo").textContent=money(promo);$("sumSavings").textContent=money(savings);
+ $("sumActivation").textContent=money(settings.activationFee);$("sumPlan").textContent=money(plan);$("sumProtect").textContent=money(protect);
+ $("sumAccessories").textContent=money(accTotal);$("sumOther").textContent=money(other);$("sumDiscount").textContent="-"+money(userDiscount+bundleDiscount);
+ $("sumPhoneTax").textContent=money(phoneTax);$("sumAccessoryTax").textContent=money(accTax);$("sumTotal").textContent=money(total);$("sumMonthly").textContent=money(monthly);
+ updateManager();
 }
-["transaction","phone","protect","plan","discount"].forEach(id=>$(id).addEventListener("input",calculate));
+["customerType","phoneSelect","planPrice","monthlyPlan","boostProtect","discount","otherFee"].forEach(id=>$(id).addEventListener("input",calculate));
 
-function quoteText(){
- const p=phones[Number($("phone").value)||0];
- return `Boost Mobile Quote
-Customer: ${$("customerName").value||"Customer"}
-Type: ${$("transaction").value}
-Phone: ${p.model}
-Phone Price: ${$("phonePrice").textContent}
-Activation Fee: ${$("activationPrice").textContent}
-Boost Protect: ${$("protectPrice").textContent}
-Plan / Service: ${$("planPrice").textContent}
-Discount: ${$("discountPrice").textContent}
-Sales Tax: ${$("taxPrice").textContent}
-TOTAL DUE TODAY: ${$("totalPrice").textContent}`;
+function renderAccessories(){
+ $("accessoryCatalog").innerHTML="";
+ accessories.forEach((a,i)=>{
+  const r=document.createElement("div");r.className="acc-row";
+  r.innerHTML=`<input type="checkbox" ${a.selected?"checked":""} onchange="toggleAccessory(${i},this.checked)">
+  <input data-i="${i}" data-f="name" value="${a.name}">
+  <input type="number" step=".01" data-i="${i}" data-f="price" value="${a.price}">
+  <input class="cost" type="number" step=".01" data-i="${i}" data-f="cost" value="${a.cost}">`;
+  $("accessoryCatalog").appendChild(r);
+ });
 }
-$("shareBtn").onclick=async()=>{const text=quoteText(); if(navigator.share){try{await navigator.share({title:"Boost Mobile Quote",text})}catch(e){}}else{await navigator.clipboard.writeText(text);alert("Quote copied.")}};
-$("copyBtn").onclick=async()=>{await navigator.clipboard.writeText(quoteText());alert("Quote copied.")};
-$("resetBtn").onclick=()=>{$("customerName").value="";$("transaction").selectedIndex=0;$("phone").selectedIndex=0;$("protect").value="No";$("plan").value=0;$("discount").value=0;calculate()};
+window.toggleAccessory=(i,v)=>{accessories[i].selected=v;renderSelectedAccessories();calculate()};
+$("saveAccessoriesBtn").onclick=()=>{
+ document.querySelectorAll("#accessoryCatalog input[data-i]").forEach(x=>{
+  const i=Number(x.dataset.i),f=x.dataset.f;
+  accessories[i][f]=f==="name"?x.value:(Number(x.value)||0);
+ });
+ localStorage.setItem("salesProAccessories",JSON.stringify(accessories));renderSelectedAccessories();calculate();alert("Accessories saved.");
+};
 
 function renderPhoneEditor(){
- const c=$("phoneList");c.innerHTML="";
+ $("phoneEditor").innerHTML="";
  phones.forEach((p,i)=>{
-  const div=document.createElement("div");div.className="phone-card";
-  div.innerHTML=`<h3>Phone ${i+1}</h3>
-   <label>Model</label><input data-i="${i}" data-f="model" value="${p.model}">
-   <div class="phone-grid">
-    <div><label>New</label><input type="number" step=".01" data-i="${i}" data-f="New Customer" value="${p.prices["New Customer"]}"></div>
-    <div><label>Port-In</label><input type="number" step=".01" data-i="${i}" data-f="Port-In" value="${p.prices["Port-In"]}"></div>
-    <div><label>Add A Line</label><input type="number" step=".01" data-i="${i}" data-f="Add A Line" value="${p.prices["Add A Line"]}"></div>
-    <div><label>Upgrade</label><input type="number" step=".01" data-i="${i}" data-f="Upgrade" value="${p.prices["Upgrade"]}"></div>
-    <div><label>Non-Upgrade</label><input type="number" step=".01" data-i="${i}" data-f="Non-Upgrade" value="${p.prices["Non-Upgrade"]}"></div>
-    <div><label>Boost Protect</label><input type="number" step=".01" data-i="${i}" data-f="protect" value="${p.protect}"></div>
-   </div>
-   <button class="btn danger" onclick="deletePhone(${i})">Delete</button>`;
-  c.appendChild(div);
+  const c=document.createElement("div");c.className="card";
+  c.innerHTML=`<label>Phone Model</label><input data-i="${i}" data-f="model" value="${p.model}">
+  <div class="grid3">
+   <div><label>SRP</label><input type="number" step=".01" data-i="${i}" data-f="srp" value="${p.srp}"></div>
+   <div><label>Phone Cost</label><input type="number" step=".01" data-i="${i}" data-f="cost" value="${p.cost||0}"></div>
+   <div><label>Boost Protect</label><input type="number" step=".01" data-i="${i}" data-f="protect" value="${p.protect||0}"></div>
+  </div>
+  <div class="grid2">
+   <div><label>New Customer</label><input type="number" step=".01" data-i="${i}" data-f="New Customer" value="${p.prices["New Customer"]||0}"></div>
+   <div><label>Port-In</label><input type="number" step=".01" data-i="${i}" data-f="Port-In" value="${p.prices["Port-In"]||0}"></div>
+   <div><label>Add A Line</label><input type="number" step=".01" data-i="${i}" data-f="Add A Line" value="${p.prices["Add A Line"]||0}"></div>
+   <div><label>Upgrade</label><input type="number" step=".01" data-i="${i}" data-f="Upgrade" value="${p.prices["Upgrade"]||0}"></div>
+   <div><label>Non-Upgrade</label><input type="number" step=".01" data-i="${i}" data-f="Non-Upgrade" value="${p.prices["Non-Upgrade"]||0}"></div>
+  </div><button class="btn danger" onclick="deletePhone(${i})">Delete</button>`;
+  $("phoneEditor").appendChild(c);
  });
 }
 window.deletePhone=i=>{phones.splice(i,1);renderPhoneEditor()};
-$("addPhoneBtn").onclick=()=>{phones.push({model:"New Phone",protect:0,prices:{"New Customer":0,"Port-In":0,"Add A Line":0,"Upgrade":0,"Non-Upgrade":0}});renderPhoneEditor()};
-$("savePricesBtn").onclick=()=>{
- document.querySelectorAll("#phoneList input").forEach(inp=>{
-  const i=Number(inp.dataset.i),f=inp.dataset.f;
-  if(f==="model") phones[i].model=inp.value.trim()||"Unnamed Phone";
-  else if(f==="protect") phones[i].protect=Number(inp.value)||0;
-  else phones[i].prices[f]=Number(inp.value)||0;
+$("addPhoneBtn").onclick=()=>{phones.push({model:"New Phone",srp:0,cost:0,protect:0,prices:{"New Customer":0,"Port-In":0,"Add A Line":0,"Upgrade":0,"Non-Upgrade":0}});renderPhoneEditor()};
+$("savePhonesBtn").onclick=()=>{
+ document.querySelectorAll("#phoneEditor input[data-i]").forEach(x=>{
+  const i=Number(x.dataset.i),f=x.dataset.f;
+  if(f==="model")phones[i].model=x.value||"Unnamed Phone";
+  else if(["srp","cost","protect"].includes(f))phones[i][f]=Number(x.value)||0;
+  else phones[i].prices[f]=Number(x.value)||0;
  });
- localStorage.setItem("boostPhones",JSON.stringify(phones));populatePhones();alert("Prices saved.");
+ localStorage.setItem("salesProPhones",JSON.stringify(phones));populatePhones();alert("Phone prices saved.");
 };
-$("restoreBtn").onclick=()=>{if(confirm("Restore sample prices?")){phones=structuredClone(defaults);localStorage.setItem("boostPhones",JSON.stringify(phones));renderPhoneEditor();populatePhones()}};
 
-function loadSettings(){$("activationFee").value=settings.activationFee;$("taxRate").value=settings.taxRate}
-$("saveSettingsBtn").onclick=()=>{settings={activationFee:Number($("activationFee").value)||0,taxRate:Number($("taxRate").value)||0};localStorage.setItem("boostSettings",JSON.stringify(settings));calculate();alert("Settings saved.")};
+function updateManager(){
+ if(!phones.length)return;
+ const p=phones[Number($("phoneSelect").value)||0],type=$("customerType").value;
+ const promo=Number(p.prices[type])||0,phoneProfit=promo-Number(p.cost||0);
+ const selected=accessories.filter(a=>a.selected);
+ const accRevenue=Math.max(0,selected.reduce((s,a)=>s+Number(a.price||0),0)-bundleDiscount);
+ const accCost=selected.reduce((s,a)=>s+Number(a.cost||0),0);
+ const accProfit=accRevenue-accCost;
+ const totalProfit=phoneProfit+accProfit;
+ const margin=accRevenue>0?(accProfit/accRevenue*100):0;
+ $("kpiAccRevenue").textContent=money(accRevenue);$("kpiProfit").textContent=money(totalProfit);$("kpiMargin").textContent=margin.toFixed(1)+"%";
+ $("mgrPhoneProfit").textContent=money(phoneProfit);$("mgrAccessoryProfit").textContent=money(accProfit);$("mgrTotalProfit").textContent=money(totalProfit);
+}
+$("unlockManagerBtn").onclick=()=>{
+ if($("managerPin").value===String(settings.pin))$("managerData").classList.remove("hidden");
+ else alert("Incorrect PIN.");
+};
 
-populatePhones();
-if("serviceWorker" in navigator) navigator.serviceWorker.register("service-worker.js");
+function loadSettings(){
+ $("storeName").value=settings.storeName;$("storeAddress").value=settings.storeAddress;$("storePhone").value=settings.storePhone;
+ $("activationFee").value=settings.activationFee;$("taxRate").value=settings.taxRate;$("settingsPin").value=settings.pin;
+}
+$("saveSettingsBtn").onclick=()=>{
+ settings={storeName:$("storeName").value,storeAddress:$("storeAddress").value,storePhone:$("storePhone").value,
+ activationFee:Number($("activationFee").value)||0,taxRate:Number($("taxRate").value)||0,pin:$("settingsPin").value||"1234"};
+ localStorage.setItem("salesProSettings",JSON.stringify(settings));calculate();alert("Settings saved.");
+};
+
+function quoteText(){
+ const p=phones[Number($("phoneSelect").value)||0];
+ const items=accessories.filter(a=>a.selected).map(a=>`${a.name}: ${money(a.price)}`).join("\n");
+ return `${settings.storeName}
+${settings.storeAddress}
+${settings.storePhone}
+
+BOOST MOBILE CUSTOMER QUOTE
+Customer: ${$("customerName").value||"Customer"}
+Salesperson: ${$("salesperson").value||"-"}
+Customer Type: ${$("customerType").value}
+Phone: ${p.model}
+Phone SRP: ${$("sumSRP").textContent}
+Promotional Price: ${$("sumPromo").textContent}
+Phone Savings: ${$("sumSavings").textContent}
+Activation Fee: ${$("sumActivation").textContent}
+Plan / First Month: ${$("sumPlan").textContent}
+Boost Protect: ${$("sumProtect").textContent}
+Accessories:
+${items||"None"}
+Accessory Total: ${$("sumAccessories").textContent}
+Tax on Phone SRP: ${$("sumPhoneTax").textContent}
+Accessory Tax: ${$("sumAccessoryTax").textContent}
+TOTAL DUE TODAY: ${$("sumTotal").textContent}
+ESTIMATED MONTHLY BILL: ${$("sumMonthly").textContent}`;
+}
+$("shareBtn").onclick=async()=>{const text=quoteText();if(navigator.share){try{await navigator.share({title:"Boost Mobile Quote",text})}catch(e){}}else{await navigator.clipboard.writeText(text);alert("Quote copied.")}};
+$("copyBtn").onclick=async()=>{await navigator.clipboard.writeText(quoteText());alert("Quote copied.")};
+$("newQuoteBtn").onclick=()=>{
+ $("customerName").value="";$("customerType").selectedIndex=0;$("phoneSelect").selectedIndex=0;$("boostProtect").value="No";
+ $("planPrice").value=60;$("monthlyPlan").value=60;$("discount").value=0;$("otherFee").value=0;
+ accessories.forEach(a=>a.selected=false);bundleDiscount=0;renderSelectedAccessories();calculate();
+};
+
+populatePhones();renderBundles();renderSelectedAccessories();
+if("serviceWorker" in navigator)navigator.serviceWorker.register("service-worker.js");
 </script>
 </body>
 </html>

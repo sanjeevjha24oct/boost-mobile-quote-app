@@ -74,6 +74,7 @@ input[type=checkbox]{width:22px;min-height:22px}
 <button id="tabQuote" class="active">Quote</button>
 <button id="tabAccessories">Accessories</button>
 <button id="tabPrices">Phones</button>
+<button id="tabImport">PDF Import</button>
 <button id="tabManager">Manager</button>
 <button id="tabSettings">Settings</button>
 </nav>
@@ -153,6 +154,13 @@ input[type=checkbox]{width:22px;min-height:22px}
 </div>
 </section>
 
+
+<section id="importPanel" class="panel">
+<div class="card"><h2>Import Phones & Promotions from PDF</h2><label>Select Price Sheet PDF</label><input id="pdfFile" type="file" accept="application/pdf,.pdf"><button class="btn orange" id="readPdfBtn">Read PDF</button><div id="pdfStatus" class="note">Upload a text-based PDF containing phone models, SRP, and promotional prices.</div></div>
+<div id="mappingCard" class="card hidden"><h3>Import Settings</h3><label>Detected Layout</label><select id="pdfLayout"><option value="columns">Model | SRP | New | Port-In | Add A Line | Upgrade | Non-Upgrade</option><option value="simple">Model | SRP | Promotional Price</option></select><button class="btn" id="parsePdfBtn">Extract Phone Prices</button></div>
+<div id="previewCard" class="card hidden"><h3>Review Imported Phones</h3><div id="importPreview"></div><div class="grid2"><button class="btn orange" id="replacePhonesBtn">Replace Current Phone List</button><button class="btn secondary" id="appendPhonesBtn">Add to Current List</button></div></div>
+<div class="note"><strong>Important:</strong> Review every imported price. Text-based PDFs work best. Scanned PDFs need OCR and may not import.</div>
+</section>
 <section id="managerPanel" class="panel">
 <div class="card manager">
 <h2>Manager Profit View</h2>
@@ -193,6 +201,7 @@ input[type=checkbox]{width:22px;min-height:22px}
 </main>
 </div>
 
+<script type="module">import * as pdfjsLib from "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.6.82/pdf.min.mjs"; pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.6.82/pdf.worker.min.mjs"; window.pdfjsLib=pdfjsLib;</script>
 <script>
 const defaultPhones=[
 {model:"Apple iPhone 16 128GB",srp:829.99,cost:700,protect:18,prices:{"New Customer":729.99,"Port-In":629.99,"Add A Line":729.99,"Upgrade":779.99,"Non-Upgrade":829.99}},
@@ -230,7 +239,7 @@ const $=id=>document.getElementById(id);
 const money=n=>new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"}).format(Number(n)||0);
 
 function showPanel(name){
- ["Quote","Accessories","Prices","Manager","Settings"].forEach(n=>{
+ ["Quote","Accessories","Prices","Import","Manager","Settings"].forEach(n=>{
   $("tab"+n).classList.toggle("active",n===name);
   $(n.toLowerCase()+"Panel").classList.toggle("active",n===name);
  });
@@ -238,7 +247,7 @@ function showPanel(name){
  if(name==="Prices")renderPhoneEditor();
  if(name==="Settings")loadSettings();
 }
-["Quote","Accessories","Prices","Manager","Settings"].forEach(n=>$("tab"+n).onclick=()=>showPanel(n));
+["Quote","Accessories","Prices","Import","Manager","Settings"].forEach(n=>$("tab"+n).onclick=()=>showPanel(n));
 $("openAccessoriesBtn").onclick=()=>showPanel("Accessories");
 $("backToQuoteBtn").onclick=()=>showPanel("Quote");
 
@@ -402,6 +411,18 @@ $("newQuoteBtn").onclick=()=>{
  $("planPrice").value=60;$("monthlyPlan").value=60;$("discount").value=0;$("otherFee").value=0;
  accessories.forEach(a=>a.selected=false);bundleDiscount=0;renderSelectedAccessories();calculate();
 };
+
+
+let importedPhones=[],extractedPdfText="";
+function cleanPdfLine(s){return s.replace(/\s+/g," ").trim()}
+function nval(v){const n=Number(String(v).replace(/[$,\s]/g,""));return Number.isFinite(n)?n:0}
+function parsePdfRows(text,layout){const lines=text.split(/\n+/).map(cleanPdfLine).filter(Boolean),out=[];const rg=/\$?\d{1,4}(?:,\d{3})*(?:\.\d{2})?/g;for(const line of lines){const m=[...line.matchAll(rg)];if(m.length<2)continue;let model=line.slice(0,m[0].index||0).replace(/[-–—:|]+$/g,"").replace(/^(device|phone|model)\s*/i,"").trim();if(model.length<3||/^(srp|retail|promo|promotion|new|port|upgrade|add a line|non)/i.test(model))continue;const v=m.map(x=>nval(x[0])),srp=v[0]||0;let p={"New Customer":0,"Port-In":0,"Add A Line":0,"Upgrade":0,"Non-Upgrade":0};if(layout==="simple"){const q=v[1]??srp;Object.keys(p).forEach(k=>p[k]=q)}else{p["New Customer"]=v[1]??srp;p["Port-In"]=v[2]??p["New Customer"];p["Add A Line"]=v[3]??p["New Customer"];p["Upgrade"]=v[4]??p["New Customer"];p["Non-Upgrade"]=v[5]??srp}out.push({model,srp,cost:0,protect:0,prices:p})}const map=new Map();out.forEach(p=>map.set(p.model.toLowerCase(),p));return [...map.values()]}
+function renderImportPreview(){const c=$("importPreview");c.innerHTML="";importedPhones.forEach((p,i)=>{const d=document.createElement("div");d.className="card";d.innerHTML=`<label>Phone Model</label><input data-imp-i="${i}" data-imp-f="model" value="${p.model}"><div class="grid3"><div><label>SRP</label><input type="number" step=".01" data-imp-i="${i}" data-imp-f="srp" value="${p.srp}"></div><div><label>New</label><input type="number" step=".01" data-imp-i="${i}" data-imp-f="New Customer" value="${p.prices["New Customer"]}"></div><div><label>Port-In</label><input type="number" step=".01" data-imp-i="${i}" data-imp-f="Port-In" value="${p.prices["Port-In"]}"></div><div><label>Add A Line</label><input type="number" step=".01" data-imp-i="${i}" data-imp-f="Add A Line" value="${p.prices["Add A Line"]}"></div><div><label>Upgrade</label><input type="number" step=".01" data-imp-i="${i}" data-imp-f="Upgrade" value="${p.prices["Upgrade"]}"></div><div><label>Non-Upgrade</label><input type="number" step=".01" data-imp-i="${i}" data-imp-f="Non-Upgrade" value="${p.prices["Non-Upgrade"]}"></div></div>`;c.appendChild(d)})}
+function syncImport(){document.querySelectorAll("[data-imp-i]").forEach(x=>{const i=Number(x.dataset.impI),f=x.dataset.impF;if(f==="model")importedPhones[i].model=x.value.trim()||"Unnamed Phone";else if(f==="srp")importedPhones[i].srp=Number(x.value)||0;else importedPhones[i].prices[f]=Number(x.value)||0})}
+$("readPdfBtn").onclick=async()=>{const file=$("pdfFile").files[0];if(!file){$("pdfStatus").textContent="Choose a PDF first.";return}$("pdfStatus").textContent="Reading PDF...";try{const data=new Uint8Array(await file.arrayBuffer()),pdf=await window.pdfjsLib.getDocument({data}).promise;let text="";for(let p=1;p<=pdf.numPages;p++){const page=await pdf.getPage(p),content=await page.getTextContent(),rows={};content.items.forEach(it=>{const y=Math.round(it.transform[5]);(rows[y]??=[]).push({x:it.transform[4],text:it.str})});Object.keys(rows).sort((a,b)=>b-a).forEach(y=>{rows[y].sort((a,b)=>a.x-b.x);text+=rows[y].map(v=>v.text).join(" ")+"\n"})}extractedPdfText=text;$("pdfStatus").textContent=`PDF read successfully (${pdf.numPages} page${pdf.numPages===1?"":"s"}).`;$("mappingCard").classList.remove("hidden")}catch(e){console.error(e);$("pdfStatus").textContent="Unable to read this PDF. It may be scanned or encrypted."}}
+$("parsePdfBtn").onclick=()=>{importedPhones=parsePdfRows(extractedPdfText,$("pdfLayout").value);if(!importedPhones.length){$("pdfStatus").textContent="No usable phone-price rows found.";return}renderImportPreview();$("previewCard").classList.remove("hidden");$("pdfStatus").textContent=`Detected ${importedPhones.length} phone model${importedPhones.length===1?"":"s"}. Review all prices.`}
+$("replacePhonesBtn").onclick=()=>{syncImport();if(!importedPhones.length||!confirm("Replace the current phone list?"))return;phones=structuredClone(importedPhones);localStorage.setItem("salesProPhones",JSON.stringify(phones));populatePhones();alert("Phone list replaced.");showPanel("Prices")}
+$("appendPhonesBtn").onclick=()=>{syncImport();const map=new Map(phones.map((p,i)=>[p.model.toLowerCase().trim(),i]));importedPhones.forEach(p=>{const k=p.model.toLowerCase().trim();if(map.has(k))phones[map.get(k)]=p;else phones.push(p)});localStorage.setItem("salesProPhones",JSON.stringify(phones));populatePhones();alert("Imported phones added or updated.");showPanel("Prices")}
 
 populatePhones();renderBundles();renderSelectedAccessories();
 if("serviceWorker" in navigator)navigator.serviceWorker.register("service-worker.js");

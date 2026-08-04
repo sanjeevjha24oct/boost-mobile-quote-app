@@ -69,7 +69,7 @@ input[type=checkbox]{width:22px;min-height:22px}
 </head>
 <body>
 <div class="app">
-<header><h1>BOOST MOBILE SALES PRO</h1><p>Quote • Upsell • Profit • Share</p></header>
+<header><h1>BOOST MOBILE SALES PRO</h1><p>Quote • Upsell • Profit • PDF Import • 1–12 Month Plans</p></header>
 <nav>
 <button id="tabQuote" class="active">Quote</button>
 <button id="tabAccessories">Accessories</button>
@@ -93,8 +93,8 @@ input[type=checkbox]{width:22px;min-height:22px}
 </select>
 <label>Phone Model</label><select id="phoneSelect" class="primary"></select>
 <div class="grid3">
-<div><label>Plan / First Month</label><input id="planPrice" type="number" step=".01" value="60"></div>
-<div><label>Monthly Plan</label><input id="monthlyPlan" type="number" step=".01" value="60"></div>
+<div><label>Monthly Plan Price</label><input id="planPrice" type="number" step=".01" value="60"></div>
+<div><label>Plan Months</label><select id="planMonths"></select></div>
 <div><label>Boost Protect</label><select id="boostProtect"><option>No</option><option>Yes</option></select></div>
 </div>
 <div class="grid2">
@@ -119,7 +119,9 @@ input[type=checkbox]{width:22px;min-height:22px}
 <div class="row"><span>Promotional Phone Price</span><span id="sumPromo">$0.00</span></div>
 <div class="row savings"><span>Phone Savings</span><span id="sumSavings">$0.00</span></div>
 <div class="row"><span>Activation Fee</span><span id="sumActivation">$35.00</span></div>
-<div class="row"><span>Plan / First Month</span><span id="sumPlan">$0.00</span></div>
+<div class="row"><span>Plan Price / Month</span><span id="sumPlanMonthly">$0.00</span></div>
+<div class="row"><span>Plan Months</span><span id="sumPlanMonths">1</span></div>
+<div class="row"><span>Total Plan Due</span><span id="sumPlan">$0.00</span></div>
 <div class="row"><span>Boost Protect</span><span id="sumProtect">$0.00</span></div>
 <div class="row"><span>Accessories</span><span id="sumAccessories">$0.00</span></div>
 <div class="row"><span>Other Fee</span><span id="sumOther">$0.00</span></div>
@@ -235,6 +237,7 @@ let settings=JSON.parse(localStorage.getItem("salesProSettings")||"null")||{
  storePhone:"",activationFee:35,taxRate:8.875,pin:"1234"
 };
 let bundleDiscount=0;
+for(let m=1;m<=12;m++){const o=document.createElement("option");o.value=m;o.textContent=m===1?"1 month":`${m} months`;$(`planMonths`).appendChild(o);}
 const $=id=>document.getElementById(id);
 const money=n=>new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"}).format(Number(n)||0);
 
@@ -280,8 +283,10 @@ function calculate(){
  const srp=Number(p.srp)||0,promo=Number(p.prices[type])||0;
  const savings=Math.max(0,srp-promo);
  const protect=$("boostProtect").value==="Yes"?(Number(p.protect)||0):0;
- const plan=Math.max(0,Number($("planPrice").value)||0);
- const monthly=Math.max(0,Number($("monthlyPlan").value)||0)+protect;
+ const planMonthly=Math.max(0,Number($("planPrice").value)||0);
+ const planMonths=Math.max(1,Number($("planMonths").value)||1);
+ const plan=planMonthly*planMonths;
+ const monthly=planMonthly+protect;
  const other=Math.max(0,Number($("otherFee").value)||0);
  const userDiscount=Math.max(0,Number($("discount").value)||0);
  const accSelected=accessories.filter(a=>a.selected);
@@ -291,12 +296,12 @@ function calculate(){
  const accTax=Math.max(0,taxableAcc)*(Number(settings.taxRate)||0)/100;
  const total=Math.max(0,promo+Number(settings.activationFee||0)+plan+protect+accTotal+other-userDiscount)+phoneTax+accTax;
  $("sumSRP").textContent=money(srp);$("sumPromo").textContent=money(promo);$("sumSavings").textContent=money(savings);
- $("sumActivation").textContent=money(settings.activationFee);$("sumPlan").textContent=money(plan);$("sumProtect").textContent=money(protect);
+ $("sumActivation").textContent=money(settings.activationFee);$("sumPlanMonthly").textContent=money(planMonthly);$("sumPlanMonths").textContent=planMonths;$("sumPlan").textContent=money(plan);$("sumProtect").textContent=money(protect);
  $("sumAccessories").textContent=money(accTotal);$("sumOther").textContent=money(other);$("sumDiscount").textContent="-"+money(userDiscount+bundleDiscount);
  $("sumPhoneTax").textContent=money(phoneTax);$("sumAccessoryTax").textContent=money(accTax);$("sumTotal").textContent=money(total);$("sumMonthly").textContent=money(monthly);
  updateManager();
 }
-["customerType","phoneSelect","planPrice","monthlyPlan","boostProtect","discount","otherFee"].forEach(id=>$(id).addEventListener("input",calculate));
+["customerType","phoneSelect","planPrice","planMonths","boostProtect","discount","otherFee"].forEach(id=>$(id).addEventListener("input",calculate));
 
 function renderAccessories(){
  $("accessoryCatalog").innerHTML="";
@@ -394,7 +399,9 @@ Phone SRP: ${$("sumSRP").textContent}
 Promotional Price: ${$("sumPromo").textContent}
 Phone Savings: ${$("sumSavings").textContent}
 Activation Fee: ${$("sumActivation").textContent}
-Plan / First Month: ${$("sumPlan").textContent}
+Plan Price / Month: ${$("sumPlanMonthly").textContent}
+Plan Months: ${$("sumPlanMonths").textContent}
+Total Plan Due: ${$("sumPlan").textContent}
 Boost Protect: ${$("sumProtect").textContent}
 Accessories:
 ${items||"None"}
@@ -408,7 +415,7 @@ $("shareBtn").onclick=async()=>{const text=quoteText();if(navigator.share){try{a
 $("copyBtn").onclick=async()=>{await navigator.clipboard.writeText(quoteText());alert("Quote copied.")};
 $("newQuoteBtn").onclick=()=>{
  $("customerName").value="";$("customerType").selectedIndex=0;$("phoneSelect").selectedIndex=0;$("boostProtect").value="No";
- $("planPrice").value=60;$("monthlyPlan").value=60;$("discount").value=0;$("otherFee").value=0;
+ $("planPrice").value=60;$("planMonths").value=1;$("discount").value=0;$("otherFee").value=0;
  accessories.forEach(a=>a.selected=false);bundleDiscount=0;renderSelectedAccessories();calculate();
 };
 
